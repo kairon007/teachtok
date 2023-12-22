@@ -33,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isAnswerSelected = false;
   int _currentIndex = 0;
   bool showAnimation = false;
-
+  String playList = '';
   @override
   void initState() {
     super.initState();
@@ -65,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final Map<String, dynamic> data = json.decode(response.body);
       setState(() {
         jsonData = data;
+        playList = data['playlist'];
         options = List<Map<String, dynamic>>.from(data['options']);
       });
 
@@ -87,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final data = json.decode(response.body);
       setState(() {
         correctAnswer = data['correct_options'][0]['id'];
-        // correctAnswer = List<String>.from(data['correct_options'].map((option) => option['id'])).first;
+
       });
     } else {
       // Handle error
@@ -127,8 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             ? Colors.green
                             : option['id'] == selectedAnswer
                                 ? Colors.red
-                                : Colors.white
-                        : Colors.white,
+                                : Colors.white70.withOpacity(0.5)
+                        : Colors.white70.withOpacity(0.5),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -136,15 +137,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       Expanded(
                           child: Text(
                         option['answer'],
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18.0,
-                          color: showAnimation
-                              ? option['id'] == selectedAnswer
-                                  ? option['id'] == correctAnswer
-                                      ? Colors.white
-                                      : Colors.black
-                                  : Colors.black
-                              : Colors.black,
+                          color:
+                              Colors.white,
                         ),
                       )),
                       if (showAnimation && option['id'] == selectedAnswer)
@@ -175,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
               backgroundColor: Colors.transparent,
               title: Row(
                 children: [
-                  Spacer(),
+                  const Spacer(),
                   Material(
                     color: Colors.transparent,
                     child: InkWell(
@@ -198,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                 ],
               ),
               actions: [
@@ -231,7 +227,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
-        body: RefreshIndicator(onRefresh: onRefresh, child: Stack(
+        body: RefreshIndicator(onRefresh: onRefresh, child:
+        Stack(
           children: [
             if (jsonData != null)
               Positioned.fill(
@@ -259,6 +256,23 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     const SizedBox(height: 16.0),
                     if (options != null) buildOptions(),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            '${jsonData!['user']['name']}',
+                            style: const TextStyle(color: Colors.white,   fontWeight: FontWeight.bold, fontSize: 15.0),
+                          ),
+                        ),
+                        Text(
+                          '${jsonData!['description']}',
+                          style: const TextStyle(color: Colors.white, fontSize: 12.0),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -275,6 +289,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
+
+
+
+
           ],
         )),
         bottomNavigationBar: Column(
@@ -283,17 +301,17 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               color: Colors.black,
-              child: const Row(
+              child:  Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Playlist',
-                      style: TextStyle(color: Colors.white, fontSize: 18.0),
+                      'Playlist ${playList.isNotEmpty? playList:''}',
+                      style: const TextStyle(color: Colors.white, fontSize: 15.0),
                     ),
                   ),
-                  Icon(
+                  const Icon(
                     Icons.navigate_next,
                     color: Colors.white,
                   ),
