@@ -256,7 +256,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     const SizedBox(height: 16.0),
                     if (options != null) buildOptions(),
-                    Column(
+                    if(jsonData!=null)Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
